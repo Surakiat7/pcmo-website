@@ -1,0 +1,82 @@
+{% extends "dashboard/base.html" %} {% block title %}ประวัติการเข้าใช้งาน{% endblock %}
+{% block content %}
+<!-- <div class="container-fluid">
+    <section>
+        <div class="row">
+            <div class="col-sm-4 my-2 my-md-0">
+                <div class="container-fluid bg-primary ">
+                    <h5 class="card-title text-uppercase text-muted mb-0"><p class="text-light">รายสัปดาห์</p></h5>
+                    <div class="col d-flex">
+                        <div class="p-2 w-100">{{month}} ครั้ง</div>
+                        < class="p-2 flex-shrink-1"><i class="fas fa-users"></i></>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 my-2 my-md-0">
+                <div class="container-fluid bg-primary">
+                    
+                    <div class="col text-center">
+                        <h5 class="card-title text-uppercase text-muted mb-0"><p class="text-light">รายเดือน</p></h5>
+                        <span class="h2 font-weight-bold mb-0"> {{month}} ครั้ง</span>                  
+                        <i class="fas fa-users"></i>                       
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="col-sm-4 my-2 my-md-0">
+                <div class="container-fluid bg-primary">
+                    <div class="col text-center">
+                        <h5 class="card-title text-uppercase text-muted mb-0"><p class="text-light">รายปี</p></h5>
+                        <span class="h2 font-weight-bold mb-0"> {{year}} ครั้ง</span>                  
+                        <i class="fas fa-users"></i>                       
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+</div> -->
+<!-- row -->
+<div class="container-fluid mt-2 mt-md-0">
+    <section>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card text-dark mb-3" style="max-width: 20rem;">
+                    <div class="card-header text-white bg-primary text-center"><b>รายสัปดาห์</b></div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <p class="card-title p-2 flex-grow-1 text-center">{{week}} ครั้ง</p>
+                                <i class="fas fa-users align-self-center"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                <div class="card text-dark  mb-3" style="max-width: 20rem;">
+                    <div class="card-header text-white bg-primary text-center"><b>รายเดือน</b></div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <p class="card-title p-2 flex-grow-1 text-center">{{month}} ครั้ง</p>
+                                <i class="fas fa-users align-self-center"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                <div class="card text-dark mb-3" style="max-width: 20rem;">
+                    <div class="card-header text-white bg-primary text-center"><b>รายปี</b></div>
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <p class="card-title p-2 flex-grow-1 text-center">{{year}} ครั้ง</p>
+                                <i class="fas fa-users align-self-center"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </section>
+</div>
+{% endblock %}

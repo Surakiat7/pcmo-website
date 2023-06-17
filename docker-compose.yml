@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:13-alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=ubu_map
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=bz-GCPVEivpZ5Bg
+
+  web:
+    build: .
+    volumes:
+      - ./src:/code
+      - ./data/static:/static
+      - ./data/upload:/upload
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: python manage.py runserver 0.0.0.0:8000
+
+  pgadmin:
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: ubu1234
+    image: dpage/pgadmin4
+    volumes:
+       - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "8001:80"
+    depends_on:
+      - db
+
+volumes:
+  db-data:
+  pgadmin-data:

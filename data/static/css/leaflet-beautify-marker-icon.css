@@ -1,0 +1,75 @@
+.beautify-marker {
+    text-align: center;
+    font-weight: 700;
+    font-family: 'Sarabun', sans-serif;
+    position:absolute;
+     -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+    .beautify-marker.circle {
+        border-radius: 100%;
+    }
+
+    .beautify-marker.circle-dot, .beautify-marker.doughnut {
+        border-radius: 100%;
+    }
+
+    .beautify-marker.marker {
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50% 100%;
+        border-bottom-left-radius: 100% 50%;
+        border-bottom-right-radius: 0%;
+        /* rotating 45deg clockwise to get the corner bottom center */
+        transform: rotate(45deg); 
+        
+    }
+
+    .beautify-marker.marker > * {
+        /* rotating 45deg counterclock to adjust marker content back to normal */
+        transform: rotate(-45deg);
+    }
+    
+    .marker-pin {
+        width: 30px;
+        height: 30px;
+        border-radius: 50% 50% 50% 0;
+        background: #e81673;
+        position: absolute;
+        transform: rotate(-45deg);
+        left: 50%;
+        top: 50%;
+        margin: -15px 0 0 -15px;
+      }
+    
+      .marker-pin::after {
+          content: '';
+          width: 24px;
+          height: 24px;
+          margin: 3px 0 0 3px;
+          background: #fff;
+          position: absolute;
+          border-radius: 50%;
+      }
+    
+      .custom-div-icon p {
+        position: absolute;
+        font-family: 'Sarabun', sans-serif;
+        font-weight: bold;
+        width: 22px;
+        font-size: 18px;
+        left: 0;
+        right: 0;
+        margin: 10px auto;
+        text-align: center;
+      }
+    
+      .custom-div-icon p.awesome {
+        margin: 12px auto;
+        font-size: 17px;
+    }
+    .custom-div-icon p2.awesome {
+        margin: 12px auto;
+        font-size: 17px;
+    }

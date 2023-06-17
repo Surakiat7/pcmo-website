@@ -1,0 +1,344 @@
+/* sarabun-regular - thai_latin-ext_latin */
+@font-face {
+    font-family: 'Sarabun';
+    font-style: normal;
+    font-weight: 400;
+    src: local(''),
+         url('../fonts/sarabun-v8-thai_latin-ext_latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+         url('../fonts/sarabun-v8-thai_latin-ext_latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  }
+
+
+@media (min-width:768px) {
+    .header-blue {
+        padding-bottom: 120px
+    }
+}
+
+#mapid {
+    width: 100%;
+    height: 450px;
+    /* position: absolute; top: 0; bottom: 0; left: 0; right: 0; */
+}
+
+body {
+    background: linear-gradient(0deg, rgba(185, 223, 251, 1) 0%, rgba(194, 226, 249, 1) 100%);
+}
+
+h2 {
+    text-align: center;
+    color: #000000;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 30px;
+}
+
+h3 {
+    text-align: center;
+    color: #2E3EB5;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+h4 {
+    text-align: center;
+    color: #2E3EB5;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 20px;
+}
+h5 {
+    text-align: center;
+    color: #2E3EB5;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+a {
+    font-family: 'Sarabun', sans-serif;
+}
+
+#text-store {
+    font-family: 'Sarabun', sans-serif;
+}
+
+.p-2 {
+    font-family: 'Sarabun', sans-serif;
+}
+
+/* .card {
+    width: 35rem;
+    font-family: 'Sarabun', sans-serif;
+} */
+
+section {
+    padding: 0px;
+}
+
+
+#footer {
+    background: #10316B!important;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+#footer h5 {
+    padding-left: 10px;
+    border-left: 3px solid #eeeeee;
+    padding-bottom: 6px;
+    margin-bottom: 20px;
+    color: #F2F7FF;
+}
+
+#footer h7 {
+    text-align: center;
+    color: #F2F7FF;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 12px;
+}
+
+#footer a {
+    color: #F2F7FF;
+    text-decoration: none !important;
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}
+
+#footer ul.social li {
+    padding: 3px 0;
+}
+
+#footer ul.social li a i {
+    margin-right: 5px;
+    font-size: 25px;
+    -webkit-transition: .5s all ease;
+    -moz-transition: .5s all ease;
+    transition: .5s all ease;
+}
+
+#footer ul.social li a,
+#footer ul.quick-links li a {
+    color: #ffffff;
+}
+
+#footer ul.social li a:hover {
+    color: #eeeeee;
+}
+
+#footer ul.quick-links li {
+    padding: 3px 0;
+    -webkit-transition: .5s all ease;
+    -moz-transition: .5s all ease;
+    transition: .5s all ease;
+}
+
+#footer ul.quick-links li:hover {
+    padding: 3px 0;
+    margin-left: 5px;
+    font-weight: 700;
+}
+
+#footer ul.quick-links li a i {
+    margin-right: 5px;
+}
+
+#footer ul.quick-links li:hover a i {
+    font-weight: 700;
+}
+
+@media (max-width:767px) {
+    #footer h5 {
+        padding-left: 0;
+        border-left: transparent;
+        padding-bottom: 0px;
+        margin-bottom: 10px;
+    }
+}
+
+/* .card {
+    border: none;
+    background: #eee
+} */
+
+.search {
+    width: 50%;
+    margin-bottom: auto;
+    margin-top: 5px;
+    height: 50px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px
+}
+
+.search-input {
+    color: white;
+    border: 0;
+    outline: 0;
+    background: none;
+    width: 0;
+    margin-top: 5px;
+    caret-color: transparent;
+    line-height: 20px;
+    transition: width 0.4s linear
+}
+
+.search .search-input {
+    padding: 0 10px;
+    width: 100%;
+    caret-color: #2E3EB5;
+    font-size: 19px;
+    font-weight: 300;
+    color: black;
+    transition: width 0.4s linear
+}
+
+.search-icon {
+    height: 34px;
+    width: 34px;
+    float: right;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 10px;
+    bottom: 30px;
+    position: relative;
+    border-radius: 5px
+}
+
+.search-icon:hover {
+    color: #fff !important
+}
+
+
+html::-webkit-scrollbar {
+    width: 20px;
+}
+
+html::-webkit-scrollbar-track {
+    background-color: #2E3EB5;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: #2E3EB5;
+    border-radius: 25px;
+}
+
+
+/* minimalist design */
+
+html::-webkit-scrollbar {
+    width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+    background: #2E3EB5;
+    border-radius: 10px;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: #2E3EB5;
+    border-radius: 10px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+    background: #2E3EB5;
+    border-radius: 10px;
+}
+
+html::-webkit-scrollbar-thumb:active {
+    background: #2E3EB5;
+    border-radius: 10px;
+}
+
+/* animated  */
+
+html::-webkit-scrollbar {
+    width: 20px;
+}
+
+html::-webkit-scrollbar-track {
+    background: linear-gradient(0deg, rgba(185, 223, 251, 1) 0%, rgba(194, 226, 249, 1)  100%, rgba(7, 0, 211, 1) 0%);
+}
+
+html::-webkit-scrollbar-thumb {
+    background: transparent;
+    box-shadow: 0px 0px 0px 100vh rgb(255, 255, 255);
+}
+
+
+/* ------------------------------------ */
+
+a {
+    margin: 0px;
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    -o-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+}
+
+a:focus {
+    outline: none !important;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+ul,
+li {
+    margin: 0px;
+    list-style-type: none;
+}
+
+/*//////////////////////////////////////////////////////////////////
+[ Table ]*/
+
+.table100 {
+    background-color: #fff;
+}
+
+table {
+    width: 100%;
+}
+
+th,
+td {
+    font-family: 'Sarabun', sans-serif;
+    padding-right: 10px;
+}
+/*==================================================================
+[ Ver1 ]*/
+
+.table100.ver1 th {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 18px;
+    color: #fff;
+    line-height: 1.4;
+    text-align: start;
+    font-weight: bold;
+    background-color: #0B409C;
+}
+
+.table100.ver1 td {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 18px;
+    color: #fff;
+    line-height: 1.4;
+    font-weight: bold;
+    background-color: #2E3EB5;
+}
+
+.table100.ver4 th {
+    font-family: 'Sarabun', sans-serif;
+    font-size: 18px;
+    color: #4272d7;
+    line-height: 1.4;
+    background-color: transparent;
+    border-bottom: 2px solid #f2f2f2;
+}
+
+#cookie {
+    font-size: 14px;
+    font-family: 'Sarabun', sans-serif;
+}

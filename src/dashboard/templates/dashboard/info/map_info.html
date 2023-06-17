@@ -1,0 +1,88 @@
+{% extends "dashboard/base.html" %} {% block title %}จัดการแผนที่ของ {{ store.data.Type }}{% endblock %} {% block content %}{% load static %}
+
+
+<div class="container-fluid mt-2 mt-md-0">
+    <section class="mb-4">
+        <div class="row">
+            <div class="col-lg-6">
+                <li>
+                    <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;">
+                        <b>รายละเอียดของ: {{ store.data.Type }}</b>
+                    </h3>
+                    <!----------------------------------------form------------------------------>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-4 w-70">
+                            <label for="1" class="form-label">ชื่อสถานที่</label>
+                            <input type="text" class="form-control" id="1" value="{{ map.title }}" name="title" placeholder="{{ store.data.Type}}" required>
+                        </div>
+                        <div class="mb-4 w-70">
+                            <label for="2" class="form-label">ตำแหน่งสถานที่(ตาม google map)</label>
+                            <input type="text" class="form-control" id="2" name="latlong" value="{{ map.latlong }}" placeholder="15.120984870093988, 104.90739875032457" required>
+                        </div>
+                        <div class="mb-4 w-70">
+                            <label for="3" class="form-label">รายละเอียด</label>
+                            <textarea type="text" class="form-control" id="3" name="detail" >{{ map.detail }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary mb-1 btn-md">บันทึก</button>
+                        </div>
+                    </form>
+                    {% if isexist %}
+                    <hr/>
+                    <form method="POST" action="{% url 'imgupload' store.id %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-4 w-70">
+                            <label for="id_image_field" class="form-label">เพิ่มรูปภาพ</label>
+                            {% load widget_tweaks %}
+                            {{ form.img|add_class:"form-control"|attr:"accept:image/*" }}
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary mb-1 btn-md">อัพโหลด</button>
+                        </div>
+                    </form>
+                    {% endif %}
+                </li>
+            </div>
+            <div class="col">
+                <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 g-3">
+                    {% for img in imgs %}
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <img class="bd-placeholder-img card-img-top" src="{{ img.img.url }}" style="width:auto;height:160px;object-fit:cover">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-end align-items-center">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteimg-{{ img.id }}">ลบรูปภาพ</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal show" id="deleteimg-{{ img.id }}" tabindex="-1" aria-hidden="true">
+                      <div class="modal-dialog">
+                          <form method="POST" action="{% url 'deleteImg' store.id img.id %}">
+                              {% csrf_token %}
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h3 class="modal-title" id="modallable-{{ img.id }}">ลบรูปภาพ</h3>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                       <b>คุณแน่ใจว่าต้องการลบรูปภาพนี้หรือไม่</b> 
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="submit" class="btn btn-danger mb-1 btn-md ">ใช่</button>
+                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ไม่</button>
+                                  </div>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!-- เขียนเนื้อหาส่วนฝั่งขวาตรงนี้ -->
+
+{% endblock %} 

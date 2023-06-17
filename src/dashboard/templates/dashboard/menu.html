@@ -1,0 +1,68 @@
+{% load static %} {% with request.resolver_match.url_name as url_name %}
+<ul class="nav nav-pills flex-column ">
+    <li class="nav-item text-center">
+        <br/>
+        <img style="width: 55px;height: 55px;" src="{% static 'img/user.png' %}" class="rounded-circle" alt="profile-picture">
+        <p class="nav-link text-white" aria-current=" page">สวัสดี : {{request.user.first_name}} {{request.user.last_name}}</p>
+    </li>
+
+    {% if request.user.is_superuser %}
+    <li class="nav-item text-center">
+        <a class="nav-link text-white {% if url_name == 'manageStore' %}active{% endif %}" href="{% url 'manageStore' %}">จัดการสัญญา</a>
+        <hr style="color:#F2F7FF;margin-top: -1px;">
+    </li>
+    <li class="nav-item text-center">
+        <a class="nav-link text-white {% if url_name == 'manageUser' %}active{% endif %}" href="{% url 'manageUser' %}">จัดการผู้ใช้</a>
+        <hr style="color:#F2F7FF;margin-top: -1px;">
+    </li>
+    <li class="nav-item text-center">
+        <a class="nav-link text-white {% if url_name == 'showLicense' %}active{% endif %}" href="{% url 'showLicense' %}" tabindex="-1">แสดงสัญญา</a>
+        <hr style="color:#F2F7FF;margin-top: -1px;">
+    </li>
+    <li class="nav-item text-center">
+        <a class="nav-link text-white {% if url_name == 'managePlace' %}active{% endif %}" href="{% url 'managePlace' %}" tabindex="-1">จัดการแผนที่</a>
+        <hr style="color:#F2F7FF;margin-top: -1px;">
+    </li>
+    <li class="nav-item text-center">
+        <a class="nav-link text-white {% if url_name == 'addData' %}active{% endif %}" href="{% url 'addData' %}" tabindex="-1">เพิ่มข้อมูลสัญญา</a>
+        <hr style="color:#F2F7FF;margin-top: -1px;">
+    </li>
+    <li class="nav-item text-center">
+        <a class="nav-link text-white {% if url_name == 'addData2' %}active{% endif %}" href="{% url 'addData2' %}" tabindex="-1">ค่าสาธารณูปโภค</a>
+        <hr style="color:#F2F7FF;margin-top: -1px;">
+    </li>
+    <li class="nav-item text-center">
+        <a class="nav-link text-white {% if url_name == 'loginLog' %}active{% endif %}" href="{% url 'loginLog' %}" tabindex="-1">สถิติเข้าใช้งาน</a>
+        <hr style="color:#F2F7FF;margin-top: -1px;">
+    </li>
+
+
+    {% elif request.user.is_staff %}
+    <li class="nav-item text-center">
+        <a class="nav-link text-white {% if url_name == 'staff' %}active{% endif %}" href="{% url 'staff' %}" tabindex="-1">รายการสัญญา</a>
+        <hr style="color:#F2F7FF;margin-top: -1px;">
+    </li>
+
+
+    {% else %}
+    <li class="nav-item text-center">
+        <a class="nav-link text-white {% if url_name == 'user' %}active{% endif %}" href="{% url 'user' %}" tabindex="-1">รายละเอียดสัญญา</a>
+        <hr style="color:#F2F7FF;margin-top: -1px;">
+    </li>
+    <li class="nav-item text-center">
+        <a class="nav-link text-white {% if url_name == 'userUtility' %}active{% endif %}" href="{% url 'userUtility' %}" tabindex="-1">ค่าสาธารณูปโภค</a>
+        <hr style="color:#F2F7FF;margin-top: -1px;">
+    </li>
+    {% endif %}
+
+
+
+    <li class="nav-item text-center">
+        <a class="nav-link text-white text-center" href="{% url 'logout' %}" tabindex="-1">
+            <button type="button" class="btn btn-danger">
+                    Logout
+                </button>
+        </a>
+    </li>
+</ul>
+{% endwith %}

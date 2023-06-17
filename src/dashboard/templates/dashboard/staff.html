@@ -1,0 +1,64 @@
+{% extends "dashboard/base.html" %} {% block title %}รายการสัญญา{% endblock %} {% block search %}
+<div class="d-flex justify-content-center mt-2 mt-md-0">
+    <div class="search">
+        <input type="text" class="search-input" placeholder="ค้นหาร้านค้า..." id="search-input">
+        <button class="search-icon btn" style="background-color: #2E3EB5;">
+      <i class="fa fa-search"></i>
+    </button>
+    </div>
+</div>
+<br> {% endblock %} {% block content %}
+<div class="col position-relative">
+    <div class="d-flex flex-column bd-highlight mb-3">
+    <div id="text-store" class="bd-highlight">
+        <h3><b>รายการสัญญา</b></h3>
+        <table id="table-search" class="table table-hover table-striped table-light" style="width:100%">
+            <thead class="table-head table100 ver1 m-b-110">
+                <tr>
+                    <th>ชื่อสถานที่</th>
+                    <th>สถานที่ตั้ง</th>
+                    <th>คู่สัญญา</th>
+                    <th class="text-center">รายละเอียด</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detail in stores %}
+                <tr class="text-start">
+                    <td>{{ detail.data.Type }}</td>
+                    <td>{{ detail.data.departments }}</td>
+                    <td>{{ detail.data.License_name }}</td>
+                    <td class="text-center">
+                        <a href="{% url 'staffstoreInfo' detail.id %}">
+                            <button type="button" class="btn btn-primary">
+                                        <i class="fas fa-bars end" ></i>
+                                    </button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </div>
+    </div>
+    {% endblock %} {% block script %}
+    <script>
+        $(document).ready(function() {
+            let table = $('#table-search').DataTable({
+                ordering: false,
+                lengthMenu: [
+                    [25, 50, 100, -1],
+                    [25, 50, 100, "ทั้งหมด"]
+                ],
+                dom: "<'row'<'col-sm-12 col-md-6'l>>" +
+                    "<'row table-responsive'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+            });
+
+
+            $('#search-input').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+        });
+    </script>
+    {% endblock %}

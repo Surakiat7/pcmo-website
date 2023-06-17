@@ -1,0 +1,181 @@
+{% extends "dashboard/base.html" %} {% block title %}จัดการ User{% endblock %} {% block content %}
+
+
+<!--!!!!!!!!!!!!!! -->
+{% comment %} modal show detail {% endcomment %}
+<!-- Modal -->
+
+{% comment %} end modal show detail {% endcomment %} {% comment %} modal delete {% endcomment %}
+<!-- Modal -->
+<div class="modal show" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalLabel2">ลบผู้ใช้</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                คุณแน่ใจว่าต้องการลบผู้ใช้รายนี้หรือไม่?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-danger" data-bs-dismiss="modal">Delete</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% comment %} end modal delete {% endcomment %}
+<!-- เขียนเนื้อหาส่วนฝั่งขวาตรงนี้ -->
+<div class="col position-relative mt-2 mt-md-0">
+    <div class="d-flex flex-column bd-highlight mb-3">
+        <div class="bd-highlight">
+
+            {% if messages %} {% for message in messages %} {% if message.tags == 'success' %}
+            <div{% if message.tags %} class="alert alert-success" {% endif %}>{{ message }}
+        </div>
+        {% elif message.tags == 'warning' %}
+        <div{% if message.tags %} class="alert alert-warning" {% endif %}>{{ message }}
+    </div>
+    {% else %}
+    <div{% if message.tags %} class="alert alert-danger" {% endif %}>{{ message }}
+</div>
+{% endif %} {% endfor %} {% endif %}
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;">
+            <b>เพิ่มผู้ใช้</b>
+        </h3>
+    </li>
+</ul>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="d-flex flex-row bd-highlight mb-1">
+        <div class="mb-2">
+            <input type="text" class="form-control p-2" id="name" placeholder="ชื่อ" name="name" autocomplete="off" required>
+        </div>
+        <div class="mb-2 ms-3">
+            <input type="text" class="form-control p-2" id="surname" placeholder="สกุล" name="surname" autocomplete="off" required>
+        </div>
+    </div>
+    <div class="d-flex flex-row bd-highlight mb-1">
+        <div class="mb-2">
+            <input type="text" class="form-control p-2" id="username" placeholder="ชื่อผู้ใช้" name="username" autocomplete="off" required>
+        </div>
+        <div class="mb-2 ms-3">
+            <input type="password" class="form-control p-2" id="password" placeholder="รหัสผ่าน" name="password" autocomplete="off" required>
+        </div>
+    </div>
+    <div class="d-flex flex-row bd-highlight mb-2">
+        <div class="mb-3">
+            <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="userlevel" value="1" id="1" checked>
+            <label class="form-check-label" for="1">
+                <b>ผู้ประกอบการ (User)</b>
+            </label>
+            </div>
+            <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="userlevel" value="2" id="2">
+            <label class="form-check-label" for="2">
+                <b>ผู้บริหาร (Executive) </b>
+            </label>
+            </div>
+            <div class="form-check">
+            <input class="form-check-input" type="radio" name="userlevel" value="3" id="3">
+            <label class="form-check-label" for="3">
+                <b>ผู้ดูแลระบบ (Admin) </b>
+            </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-row bd-highlight">
+        <div class="mb-2">
+            <button type="submit" class="btn btn-primary mb-1">เพิ่มผู้ใช้</button>
+        </div>
+    </div>
+</form>
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;">
+            <b>รายชื่อผู้ใช้</b>
+        </h3>
+    </li>
+</ul>
+
+</div>
+</div>
+</div>
+
+<div class="d-flex justify-content-center px-2">
+    <div class="search">
+        <input type="text" class="search-input" placeholder="ค้นหาผู้ใช้..." id="search-input">
+        <button class="search-icon btn" style="background-color: #2E3EB5;">
+      <i class="fa fa-search"></i>
+    </button>
+    </div>
+</div>
+
+<div class="col position-relative">
+    <div class="d-flex flex-column bd-highlight mb-3">
+        <div id="text-store" class="bd-highlight">
+            <br />
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'exportUser' %}" download>
+                    <button type="button" class="btn btn-success">ส่งออกผู้ประกอบการ</button>
+                </a>
+            </div>
+            <table id="table-search" class="table table-hover table-striped table-light" style="width:100%">
+                <thead class="table-head table100 ver1 m-b-110">
+                    <tr>
+                        <th class="text-start">รายชื่อผู้ใช้</th>
+                        <th class="text-start">ชื่อ-สกุล</th>
+                        <th class="text-center">ประเภทผู้ใช้</th>
+                        <th class="text-end">รายละเอียด</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if userlist %} {% for user in userlist %}
+                    <tr>
+                        <td>{{user.username}}</td>
+                        <td>{{user.first_name}} {{user.last_name}}</td>
+                        <td class="text-center">
+                            {% if user.is_superuser %} ผู้ดูแลระบบ {% elif user.is_staff %} ผู้บริหาร {% else %} ผู้ประกอบการ {% endif %}
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'userInfo' user.id %}">
+                                <button type="button" class="btn btn-primary">
+                                        <i class="fas fa-bars end" ></i>
+                                    </button>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %} {% endif %}
+                </tbody>
+            </table>
+        </div>
+        <!-- End forloop here -->
+    </div>
+</div>
+{% endblock %} {% block script %}
+<script>
+    $(document).ready(function() {
+        let table = $('#table-search').DataTable({
+            ordering: false,
+            lengthMenu: [
+                [25, 50, 100, -1],
+                [25, 50, 100, "ทั้งหมด"]
+            ],
+            dom: "<'row'<'col-sm-12 col-md-6'l>>" +
+                "<'row table-responsive'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+        });
+
+
+        $('#search-input').on('keyup', function() {
+            table.search(this.value).draw();
+        });
+    });
+</script>
+{% endblock %}

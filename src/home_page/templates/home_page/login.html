@@ -1,0 +1,101 @@
+<!DOCTYPE html> {% load static %} {% load widget_tweaks %}
+<html class="h-100">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/css/bootstrap.min.css" integrity="sha512-6KY5s6UI5J7SVYuZB4S/CZMyPylqyyNZco376NM2Z8Sb8OxEdp02e1jkKk/wZxIEmjQ6DRCEBhni+gpr9c4tvA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!------------------------css---------------------->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <title>เข้าสู่ระบบ</title>
+    <link rel="icon" href="{% static 'img/ubulogo.png' %}" type="image/icon type">
+</head>
+
+<body class="d-flex flex-column h-100">
+
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/head.png' %}" alt="" width="90%" height="70%"></a>
+        </div>
+    </nav>
+
+        <!-------Login-logo------------>
+        <div class="container">
+            <div class="d-flex justify-content-center">
+                <img src="{% static 'img/userlogin.png' %}" alt="" width="90" height="90">&nbsp;&nbsp;
+                <svg height="83" width="15">
+                    <line x1="0" y1="2" x2="0" y2="150" style="stroke:#2E3EB5;stroke-width:4" />
+                    Sorry, your browser does not support inline SVG.
+                </svg>
+                <div id="login" class="align-self-center fs-2" style="color: #2E3EB5; font-family: 'Sarabun', sans-serif;">
+                <b>เข้าสู่ระบบ</b>
+                </div>
+            </div>
+        </div>
+        <br/>
+        {% comment %} <!---------Login Form---------------> {% endcomment %}
+        <br/>
+        {% if messages %} {% for message in messages %} {% if message.tags == 'success' %}
+            <div{% if message.tags %} class="alert alert-success" {% endif %}>{{ message }}
+        </div>
+        {% elif message.tags == 'warning' %}
+        <div{% if message.tags %} class="alert alert-warning" {% endif %}>{{ message }}
+        </div>
+        {% else %}
+        <div{% if message.tags %} class="alert alert-danger" align="center" {% endif %}>{{ message }}
+        </div>
+        {% endif %} {% endfor %} {% endif %}
+                    
+        {% if next %} {% if user.is_authenticated %}
+        <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.
+        </p>
+        {% else %}
+        <p>Please login to see this page.</p>
+        {% endif %} {% endif %}
+
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div id="forminputlogin">
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-4">
+                        <div class="form-floating col-mb-4">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="Username" name="username" required>
+                            <label for="floatingInput">Username</label>
+                        </div><br>
+                        <div class="form-floating ">
+                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password" required>
+                            <label for="floatingPassword">Password</label>
+                        </div><br>
+                        <div class="d-grid gap-2">
+                            <input type="hidden" name="next" value="{{ next }}">
+                            <input type="submit" value="Login" class="btn button text-white" style="background-color: #2E3EB5; text-decoration: none;">
+                            <!-- <button type="submit" class="btn button" style="background-color: #2E3EB5;"><a class="text-white"
+    style="text-decoration: none;">Login</a></button> -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <footer class="footer mt-auto py-3" id='footer'>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                    <p class="h6">Copyright © {% now "Y" %}. <a class="text-green ml-2" target="_blank">
+                            สำนักบริหารทรัพย์สินและสิทธิประโยชน์ มหาวิทยาลัยอุบลราชธานี </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/js/bootstrap.bundle.min.js" integrity="sha512-trzlduO3EdG7Q0xK4+A+rPbcolVt37ftugUSOvrHhLR5Yw5rsfWXcpB3CPuEBcRBCHpc+j18xtQ6YrtVPKCdsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+
+</html>

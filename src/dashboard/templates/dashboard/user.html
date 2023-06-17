@@ -1,0 +1,113 @@
+{% extends 'dashboard/base.html' %} {% load static %} {% block title %}user{% endblock %} {% block content %}
+
+<!--!!!!!!!!!!!!!! -->
+<ul class="nav nav-pills mt-2 mt-md-0">
+    <li class="nav-item">
+        <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;">
+            <b>สัญญาผู้ประกอบการ</b>
+        </h3>
+    </li>
+</ul>
+
+<div class="accordion mb-4" id="storelist">
+    {% for store in stores %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="header-{{store.id}}">
+        <button class="accordion-button {% if stores|length != 1 %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collab-{{store.id}}" aria-expanded="{% if stores|length == 1 %}true{% else %}fasle{% endif %}" aria-controls="collab-{{store.id}}">
+                {{store.data.Type}}
+        </button>
+        </h2>
+        <div id="collab-{{store.id}}" class="accordion-collapse collapse {% if stores|length == 1 %}show{% endif %}" aria-labelledby="header-{{store.id}}" data-bs-parent="storelist">
+        <div class="accordion-body">
+            <div class="d-flex flex-row bd-highlight mb-1" style="background-color: white;">
+                <div class="container-fluid"><br>
+                    <b>ชื่อร้าน/ประเภทกิจการ : </b> {{store.data.Type}}
+                    <br>
+                    <hr>
+                    <b>คณะ/หน่วยงาน/สำนักงาน : </b> {{store.data.departments}}
+                    <br>
+                    <hr>
+                    <b>ข้อมูลผู้ประกอบการ/คู่สัญญา : </b> {{store.data.License_name}}
+                    <br>
+                    <hr>
+                    <b>ที่อยู่ : </b> {{store.data.Address}}
+                    <br>
+                    <hr>
+                    <b>หมายเลขโทรศัพท์ : </b> {{store.data.PhoneNumber}}
+                    <br>
+                    <hr>
+                    <b>อายุสัญญา </b>
+                    <br>
+                    <br>
+                    <b>ระยะเวลา : </b> {{store.data.contract_period}}
+                    <br>
+                    <br>
+                    <b>วันเริ่ม : </b> {{store.data.contract_start}}
+                    <br>
+                    <br>
+                    <b>วันสิ้นสุดสัญญา : </b> {{store.data.contract_end}}
+                    <br>
+                    <hr>
+                    <b>อัตราค่าบำรุงพื้นที่(บาท/ปี) : </b> {{store.data.Area_maintenance}}
+                    <br><br>
+                    <b>ใบเสร็จรับเงิน </b>
+                    <br>
+                    <br>
+                    <b>เล่มที่ : </b> {{store.data.Maintenance_id}}
+                    <br><br>
+                    <b>เลขที่ : </b> {{store.data.Maintenance_Number}}
+                    <br><br>
+                    <b>ลงวันที่ : </b> {{store.data.Maintenance_Timestamp}}
+                    <br>
+                    <hr>
+                    <b>ค่าประกันสัญญา(บาท) : </b> {{store.data.contract_insurance}}
+                    <br>
+                    <br>
+                    <b>ใบเสร็จรับเงิน </b>
+                    <br>
+                    <br>
+                    <b>เล่มที่ : </b> {{store.data.Insurance_id}}
+                    <br><br>
+                    <b>เลขที่ : </b> {{store.data.Insurance_Number}}
+                    <br><br>
+                    <b>ลงวันที่ : </b> {{store.data.Insurance_Timestamp}}
+                    <br>
+                    <hr>
+                    <b>เงินบริจาคสนับสนุนเป็นทุนการศึกษาแก่นักศึกษา(บาท) </b> : {{store.data.Support_ST}}
+                    <br>
+                    <br>
+                    <b>ใบเสร็จรับเงิน </b>
+                    <br>
+                    <br>
+                    <b>เล่มที่ : </b> {{store.data.Support_id_ST}}
+                    <br><br>
+                    <b>เลขที่ : </b> {{store.data.Support_Number_ST}}
+                    <br><br>
+                    <b>ลงวันที่ : </b> {{store.data.SupportTimestamp_ST}}
+                    <br>
+                    <hr>
+                    <b>สนับสนุนสำนักบริหารทรัพย์สินฯ(บาท) </b> : {{store.data.Support_PCM}}
+                    <br>
+                    <br>
+                    <b>ใบเสร็จรับเงิน </b>
+                    <br>
+                    <br>
+                    <b>เล่มที่ : </b> {{store.data.Support_id_PCM}}
+                    <br><br>
+                    <b>เลขที่ : </b> {{store.data.Support_Number_PCM}}
+                    <br><br>
+                    <b>ลงวันที่ : </b> {{store.data.Support_Timestamp_PCM}}
+                    <br>
+                    <hr>
+                    <b>หมายเหตุ : </b> {{store.data.Note}}
+                    <hr>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %} {% block script %} {% endblock %}

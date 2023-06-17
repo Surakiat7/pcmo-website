@@ -1,0 +1,151 @@
+{% extends 'dashboard/base.html' %} {% load static %} {% block title %}user{% endblock %} {% block content %}
+
+<!--!!!!!!!!!!!!!! -->
+<ul class="nav nav-pills mt-2 mt-md-0">
+    <li class="nav-item">
+        <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;">
+            <b>ประวัติการชำระค่าสาธารณูปโภค</b>
+        </h3>
+    </li>
+</ul>
+
+<div class="accordion mb-4" id="storelist">
+    {% for store in stores %}
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="header-{{store.id}}">
+            <button class="accordion-button {% if stores|length != 1 %}collapsed{% endif %}" type="button"
+                data-bs-toggle="collapse" data-bs-target="#collab-{{store.id}}"
+                aria-expanded="{% if stores|length == 1 %}true{% else %}fasle{% endif %}"
+                aria-controls="collab-{{store.id}}">
+                {{store.data.Type}}
+            </button>
+        </h2>
+        <div id="collab-{{store.id}}" class="accordion-collapse collapse {% if stores|length == 1 %}show{% endif %}"
+            aria-labelledby="header-{{store.id}}" data-bs-parent="storelist">
+            <div class="accordion-body">
+                <div class="row">
+                    {% if store.water %}
+                    <div class="col-md-4">
+                        <div class="d-flex flex-column bd-highlight mb-3">
+                            <div class="bd-highlight">
+                                <table id="water-table-{{store.id}}" class="table table-hover table-striped table-light"
+                                    style="width:100%">
+                                    <thead class="table-head table100 ver1 m-b-110">
+                                        <tr>
+                                            <th>การชำระค่าน้ำประปา</th>
+                                            <th>จำนวนเงิน (บาท)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in store.water %}
+                                        <tr class="table-success">
+                                            <td>{{ i.date | date:"F Y" }}</td>
+                                            <td>{{ i.water}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- End forloop here -->
+                        </div>
+                    </div>
+                    {% endif %} {% if store.electric %}
+                    <div class="col-md-4">
+                        <div class="d-flex flex-column bd-highlight mb-3">
+                            <div class="bd-highlight">
+                                <table id="electric-table-{{store.id}}" class="table table-hover table-striped table-light"
+                                    style="width:100%">
+                                    <thead class="table-head table100 ver1 m-b-110">
+                                        <tr>
+                                            <th>การชำระค่าไฟฟ้า</th>
+                                            <th>จำนวนเงิน (บาท)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in store.electric %}
+                                        <tr class="table-success">
+                                            <td>{{ i.date | date:"F Y" }}</td>
+                                            <td>{{ i.electric}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- End forloop here -->
+                        </div>
+                    </div>
+                    {% endif %} {% if store.wash %}
+                    <div class="col-md-4">
+                        <div class="d-flex flex-column bd-highlight mb-3">
+                            <div class="bd-highlight">
+                                <table id="wash-table-{{store.id}}" class="table table-hover table-striped table-light"
+                                    style="width:100%">
+                                    <thead class="table-head table100 ver1 m-b-110">
+                                        <tr>
+                                            <th>การชำระค่าล้างภาชนะ</th>
+                                            <th>จำนวนเงิน (บาท)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for i in store.wash %}
+                                        <tr class="table-success">
+                                            <td>{{ i.date | date:"F Y" }}</td>
+                                            <td>{{ i.wash}}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- End forloop here -->
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}  {% block script %}
+<script>
+    $(document).ready(function() {
+        {% for store in stores %}
+            {% if store.electric %}
+            $('#electric-table-{{store.id}}').DataTable({
+                ordering: false,
+                lengthMenu: [
+                    [6],
+                    [6]
+                ],
+                dom: "<'row table-responsive'<'col-sm-12'tr>>" +
+                    "<'row'<'col-12'p>>"
+            });
+            {% endif %}
+            {% if store.water %}
+            $('#water-table-{{store.id}}').DataTable({
+                ordering: false,
+                lengthMenu: [
+                    [6],
+                    [6]
+                ],
+                dom: "<'row table-responsive'<'col-sm-12'tr>>" +
+                    "<'row'<'col-12'p>>"
+            });
+            {% endif %}
+            {% if store.wash %}
+            $('#wash-table-{{store.id}}').DataTable({
+                ordering: false,
+                lengthMenu: [
+                    [6],
+                    [6]
+                ],
+                dom: "<'row table-responsive'<'col-sm-12'tr>>" +
+                    "<'row'<'col-12'p>>"
+            });
+            {% endif %}
+        {% endfor %}
+    });
+</script>
+{% endblock %}

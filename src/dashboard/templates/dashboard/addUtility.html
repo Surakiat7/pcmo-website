@@ -1,0 +1,96 @@
+{% extends "dashboard/base.html" %} {% block title %}เพิ่มข้อมูลค่าสาธารณูปโภค{% endblock %} {% block externalhead %}
+
+
+<!-- End Date time -->
+{% endblock %} {% block search %}
+<br>
+<div class="d-flex justify-content-center px-2">
+    <div class="search">
+        <input type="text" class="search-input" placeholder="ค้นหา..." id="search-input">
+        <button class="search-icon btn" style="background-color: #2E3EB5;">
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+</div>
+{% endblock %} {% block content %}
+<section>
+    <br><br>
+    <ul class="nav nav-pills">
+        <li class="nav-item">
+            <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;"><b class="h3">เพิ่มข้อมูลค่าสาธารณูปโภค</b>
+            </h3>
+        </li>
+    </ul>
+
+    <form method="POST" action="{% url 'addUtilityPost' %}">
+        {% csrf_token %}
+        <div class="alert alert-primary text-center h1 mb-1" role="alert">
+            {{ form_date | date:"F Y" }}
+        </div>
+        <input type="hidden" name="startDate" id="startDate" value="{{ billing_month }}" />
+
+        <div class="col position-relative">
+            <div class="d-flex flex-column bd-highlight mb-3">
+                <div id="text-store" class="bd-highlight">
+                    <table id="table-search" class="table table-default table-hover table-striped table-bordered border-dark" style="width:100%">
+                        <thead class="table-head table100 ver1 m-b-110">
+                            <tr>
+                                <th>ประเภทกิจการ</th>
+                                <th>ชื่อผู้ที่ได้รับสิทธิ์</th>
+                                <th>ค่าน้ำประปา</th>
+                                <th>ค่าไฟฟ้า</th>
+                                <th>ค่าล้างภาชนะ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for u in billing_table %}
+                            <tr>
+                                <td>{{ u.store.data.Type }}</td>
+                                <td>{{ u.store.data.License_name }}</td>
+                                <!-- <td align="center"><input class="form-check-input h4" type="checkbox" id="Checkbox1" name="{{ u.store.id }}-is_water" {% if u.is_water %} checked {% endif %}></td> -->
+                                <td align="center">
+                                    <div class="mb-3">
+                                        <input type="number" step="0.01" step=0.01 class="form-control" id="UtilityInput1" placeholder="ค่าน้ำประปา" name="{{ u.id }}-water" value="{{ u.water }}">
+                                    </div>
+                                </td>
+                                <td align="center">
+                                    <div class="mb-3">
+                                        <input type="number" step="0.01" class="form-control" id="UtilityInput2" placeholder="ค่าไฟฟ้า" name="{{ u.id }}-electric" value="{{ u.electric }}">
+                                    </div>
+                                </td>
+                                <td align="center">
+                                    <div class="mb-3">
+                                        <input type="number" step="0.01" class="form-control" id="UtilityInput3" placeholder="ค่าล้างภาชนะ" name="{{ u.id }}-wash" value="{{ u.wash }}">
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End forloop here -->
+            </div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary mb-1 btn-lg align-self-center" id="addInput">บันทึก</button>
+        </div>
+        <br>
+    </form>
+</section>
+
+{% endblock %} {% block script %}
+<script>
+    $(document).ready(function() {
+        let table = $('#table-search').DataTable({
+            ordering: false,
+            paging: false,
+            dom: "<'row table-responsive'<'col-sm-12'tr>>"
+        });
+
+
+        $('#search-input').on('keyup', function() {
+            table.search(this.value).draw();
+        });
+    });
+</script>
+{% endblock %}

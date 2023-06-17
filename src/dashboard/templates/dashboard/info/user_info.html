@@ -1,0 +1,120 @@
+{% extends "dashboard/base.html" %} {% block title %}จัดการ User{% endblock %} {% block content %}
+
+
+<!--!!!!!!!!!!!!!! -->
+{% comment %} modal show detail {% endcomment %}
+<!-- Modal -->
+
+{% comment %} end modal show detail {% endcomment %} {% comment %} modal delete {% endcomment %}
+<!-- Modal -->
+<div class="container-fluid mt-2 mt-md-0">
+    <section>
+        <div class="row">
+            <div class="col-sm-6">
+                <li class="">
+                    <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;">
+                        <b>รายละเอียดของ: {{ user.username }}</b>
+                    </h3>
+
+                    <!----------------------------------------form------------------------------>
+                    <form method="POST" action="{% url 'editUser' user.id %}">
+                        {% csrf_token %}
+                        <div class="mb-3 w-70">
+                            <label for="formGroupExampleInput" class="form-label">ชื่อ</label>
+                            <input type="text" class="form-control" id="formGroupExampleInput" value="{{ user.first_name }}" name="fname" required>
+                        </div>
+                        <!-- --------- -->
+                        <div class="mb-4 w-70">
+                            <label for="formGroupExampleInput2" class="form-label">นามสกุล</label>
+                            <input type="text" class="form-control" id="formGroupExampleInput2" value="{{ user.last_name }}" name="lname" required>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary mb-1 btn-md">บันทึก</button>
+                        </div>
+                    </form>
+                    <br>
+                    <form method="POST" action="{% url 'changePassword' user.id %}">
+                        {% csrf_token %}
+                        <div class="mb-3 w-70">
+                            <label for="formGroupExampleInput3" class="form-label" style="font-weight: bold;">เปลี่ยนรหัผ่าน</label>
+                            <hr>
+                            <label for="formGroupExampleInput3" class="form-label">กรอกรหัสผ่านไหม่</label>
+                            <input type="password" class="form-control" id="formGroupExampleInput3" placeholder="*****" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary mb-1 btn-md">เปลี่ยนรหัสผ่าน</button>
+                        </div>
+                    </form>
+                    <hr />
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-danger mb-1 btn-md" data-bs-toggle="modal" data-bs-target="#modalRemove">ลบผู้ใช้ {{user.username}}</button>
+                    </div>
+                </li>
+
+
+            </div>
+            <div class="col-sm-6">
+                <div class="d-flex flex-column bd-highlight mb-3">
+                    <div class="bd-highlight">
+                        <table id="loginhis" class="table table-hover table-striped table-light" style="width:100%">
+                            <thead class="table-head table100 ver1 m-b-110">
+                                <tr>
+                                    <th>ประวัติการเข้าใช้งานล่าสุด</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if history %} {% for h in history %}
+                                <tr>
+                                    <td>{{ h.timestamp }}</td>
+                                </tr>
+                                {% endfor %} {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- End forloop here -->
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="modal fade" id="modalRemove" tabindex="-1" aria-labelledby="ModalRemoveLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="{% url 'deleteUser' user.id %}">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalRemoveLabel">ลบผู้ใช้</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    คุณแน่ใจว่าต้องการลบผู้ใช้ <b>{{user.username}}</b> หรือไม่
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger mb-1 btn-md ">ใช่</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ไม่</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %} {% block script %}
+<script>
+    $(document).ready(function() {
+        let table = $('#loginhis').DataTable({
+            ordering: false,
+            lengthMenu: [
+                [10],
+                [10]
+            ],
+            dom: "<'row table-responsive'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+        });
+
+
+        $('#search-input').on('keyup', function() {
+            table.search(this.value).draw();
+        });
+    });
+</script>
+{% endblock %}

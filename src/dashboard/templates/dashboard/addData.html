@@ -1,0 +1,212 @@
+{% extends "dashboard/base.html" %} {% block title %}เพิ่มข้อมูลสัญญา{% endblock %} {% block externalhead %}
+
+<!-------Date time---------->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function() {
+        $("#datepicker").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker1").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker2").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker3").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker4").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker5").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker6").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    });
+</script>
+<!-- End Date time -->
+{% endblock %} {% block content %}
+
+<!-- เขียนเนื้อหาส่วนฝั่งขวาตรงนี้ -->
+<div>
+    <div class="d-flex flex-column bd-highlight mt-2 mt-md-0 px-4">
+        <div class="bd-highlight">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;"><b class="h3">เพิ่มข้อมูลด้วย excel</b>
+                    </h3>
+                </li>
+            </ul>
+
+            <form name="forminputfiles" method="POST" enctype="multipart/form-data" action="{% url 'addExcel' %}">{% csrf_token %}
+                <input type="file" id="myfile" class="form-control p-4 mb-2" style="width: 50%;" name="myfile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required>
+                <button type="submit" class="btn btn-primary mb-2" id="addExcel">อัพโหลด</button>
+            </form>
+
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;"><b class="h3">เพิ่มข้อมูลด้วยแบบฟอร์ม</b>
+                    </h3>
+                </li>
+            </ul>
+            <!----------------------------------------form------------------------------>
+            <form method="POST" action="{% url 'addDataForm' %}">
+                {% csrf_token %}
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput1" class="form-label">ประเภทกิจการ</label>
+                    <input type="text" class="form-control" id="formGroupInput1" placeholder="Type" name="Type" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput2" class="form-label">คณะ/หน่วยงาน/สำนักงาน</label>
+                    <input type="text" class="form-control" id="formGroupInput2" placeholder="Departments" name="departments" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput3" class="form-label">ชื่อผู้ที่ได้รับสิทธิ์</label>
+                    <input type="text" class="form-control" id="formGroupInput1" placeholder="License_name" name="License_name" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput4" class="form-label">ที่อยู่</label>
+                    <input type="text" class="form-control" id="formGroupInput4" placeholder="Address" name="Address" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput5" class="form-label">หมายเลขโทรศัพท์</label>
+                    <input type="number" class="form-control" id="formGroupInput5" placeholder="PhoneNumber" name="PhoneNumber" required>
+                </div>
+                <!-- --------- -->
+                <br>
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput6" class="form-label" style="font-weight: bold;">อายุสัญญา</label>
+                    <hr>
+                    <label for="formGroupInput6" class="form-label">ระยะเวลา</label>
+                    <input type="text" class="form-control" id="formGroupInput6" placeholder="contract_period" name="contract_period" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="datepicker" class="form-label">เริ่ม</label>
+                    <input type="text" class="form-control" id="datepicker" placeholder="contract_start" autocomplete="off" name="contract_start" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="datepicker1" class="form-label">สิ้นสุด</label>
+                    <input type="text" class="form-control" id="datepicker1" placeholder="contract_end" autocomplete="off" name="contract_end" required>
+                </div>
+                <!-- --------- -->
+                <br>
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput7" class="form-label" style="font-weight: bold;">อัตราค่าบำรุงพื้นที่(บาท/ปี)</label>
+                    <input type="number" class="form-control" id="formGroupInput7" placeholder="Area_maintenance" name="Area_maintenance">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupExampleInput2" class="form-label" style="font-weight: bold;">ใบเสร็จรับเงิน</label>
+                    <br>
+                    <label for="formGroupInput8" class="form-label">เล่มที่</label>
+                    <input type="number" class="form-control" id="formGroupInput8" placeholder="Maintenance_id" name="Maintenance_id">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput9" class="form-label">เลขที่</label>
+                    <input type="number" class="form-control" id="formGroupInput9" placeholder="Maintenance_Number" name="Maintenance_Number">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="datepicker3" class="form-label">ลงวันที่</label>
+                    <input type="text" class="form-control" id="datepicker3" placeholder="Maintenance_Timestamp" autocomplete="off" name="Maintenance_Timestamp">
+                    <hr>
+                </div>
+                <!-- --------- -->
+                <br>
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput10" class="form-label" style="font-weight: bold;">ค่าประกันสัญญา (บาท)</label>
+                    <input type="number" class="form-control" id="formGroupInput10" placeholder="contract_insurance" name="contract_insurance">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupExampleInput3" class="form-label" style="font-weight: bold;">ใบเสร็จรับเงิน</label>
+                    <br>
+                    <label for="formGroupInput11" class="form-label">เล่มที่</label>
+                    <input type="number" class="form-control" id="formGroupInput11" placeholder="Insurance_id" name="Insurance_id">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput12" class="form-label">เลขที่</label>
+                    <input type="number" class="form-control" id="formGroupInput12" placeholder="Insurance_Number" name="Insurance_Number">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="datepicker4" class="form-label">ลงวันที่</label>
+                    <input type="text" class="form-control" id="datepicker4" placeholder="Insurance_Timestamp" autocomplete="off" name="Insurance_Timestamp">
+                    <hr>
+                </div>
+                <!-- --------- -->
+                <br>
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput" class="form-label" style="font-weight: bold;">เงินบริจาค</label>
+                    <label for="formGroupInput13" class="form-label" style="font-weight: bold;">สนับสนุนเป็นทุนการ
+            ศึกษาแก่นักศึกษา (บาท)</label>
+                    <input type="number" class="form-control" id="formGroupInput13" placeholder="Support_ST" name="Support_ST">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupExampleInput2" class="form-label" style="font-weight: bold;">ใบเสร็จรับเงิน</label>
+                    <br>
+                    <label for="formGroupInput14" class="form-label">เล่มที่</label>
+                    <input type="number" class="form-control" id="formGroupInput14" placeholder="Support_id_ST" name="Support_id_ST">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput15" class="form-label">เลขที่</label>
+                    <input type="number" class="form-control" id="formGroupInput15" placeholder="Support_Number_ST" name="Support_Number_ST">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="datepicker5" class="form-label">ลงวันที่</label>
+                    <input type="text" class="form-control" id="datepicker5" placeholder="SupportTimestamp_ST" autocomplete="off" name="SupportTimestamp_ST">
+                    <hr>
+                </div>
+                <!-- --------- -->
+                <br>
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput16" class="form-label" style="font-weight: bold;">สนับสนุนสำนักบริหารทรัพย์สินฯ (บาท)</label>
+                    <input type="number" class="form-control" id="formGroupInput16" placeholder="Support_PCM" name="Support_PCM">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupExampleInput2" class="form-label" style="font-weight: bold;">ใบเสร็จรับเงิน</label>
+                    <br>
+                    <label for="formGroupInput17" class="form-label">เล่มที่</label>
+                    <input type="number" class="form-control" id="formGroupInput17" placeholder="Support_id_PCM" name="Support_id_PCM">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="formGroupInput18" class="form-label">เลขที่</label>
+                    <input type="number" class="form-control" id="formGroupInput18" placeholder="Support_Number_PCM" name="Support_Number_PCM">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 w-50">
+                    <label for="datepicker6" class="form-label ">ลงวันที่</label>
+                    <input type="text" class="form-control" id="datepicker6" placeholder="Support_Timestamp_PCM" autocomplete="off" name="Support_Timestamp_PCM">
+                    <hr>
+                </div>
+                <!-- --------- -->
+
+                <div class="form-outline w-50 mb-3">
+                    <label for="formGroupInput19" class="form-label">หมายเหตุ</label>
+                    <textarea class="form-control" id="formGroupInput19" rows="2" placeholder="Note" name="Note"></textarea>
+                </div>
+                <!-- End forloop here -->
+                <button type="submit" class="btn btn-primary mb-1" id="addInput">อัพโหลด</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

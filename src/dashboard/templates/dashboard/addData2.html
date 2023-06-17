@@ -1,0 +1,59 @@
+{% extends "dashboard/base.html" %} {% block title %}เพิ่มข้อมูลค่าสาธารณูปโภค{% endblock %} {% block externalhead %}
+
+<!-------Date time---------->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function() {
+        $('.date-picker').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'yy-mm',
+            onClose: function(dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+        });
+    });
+
+    $("#checkAll").click(function() {
+        $(".check").prop('checked', $(this).prop('checked'));
+    });
+</script>
+<style>
+    .ui-datepicker-calendar {
+        display: none;
+    }
+</style>
+<!-- End Date time -->
+{% endblock %}{% block content %}
+<section>
+    <ul class="nav nav-pills mt-2 mt-md-0">
+        <li class="nav-item">
+            <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;"><b class="h3">เพิ่มข้อมูลค่าสาธารณูปโภค</b>
+            </h3>
+        </li>
+    </ul>
+    {% if messages %} {% for message in messages %} {% if message.tags == 'success' %}
+        <div{% if message.tags %} class="alert alert-success" {% endif %}>{{ message }}
+    </div>
+    {% elif message.tags == 'warning' %}
+    <div{% if message.tags %} class="alert alert-warning" {% endif %}>{{ message }}
+    </div>
+    {% else %}
+    <div{% if message.tags %} class="alert alert-danger" {% endif %}>{{ message }}
+        </div>
+    {% endif %} {% endfor %} {% endif %}
+    <div class="form-row mt-2">
+        <div class="form-group col-md-3">
+            <form method="POST" action="{% url 'addData2' %}">
+                {% csrf_token %}
+                <label for="startDate">โปรดเลือกปีและเดือน</label>
+                <input name="startDate" id="startDate" class="date-picker mb-3 form-control" required autocomplete="off" placeholder="เลือกปีและเดือน">
+                <button type="submit" class="btn btn-primary mb-3" id="addInput">ถัดไป</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

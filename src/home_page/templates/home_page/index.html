@@ -1,0 +1,320 @@
+<!DOCTYPE html> {% load static %}
+<html lang='th'>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/css/bootstrap.min.css" integrity="sha512-6KY5s6UI5J7SVYuZB4S/CZMyPylqyyNZco376NM2Z8Sb8OxEdp02e1jkKk/wZxIEmjQ6DRCEBhni+gpr9c4tvA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-----datatable------>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/datatables.min.css' %}"/>
+    <script type="text/javascript" src="{% static 'js/datatables.min.js' %}"></script>
+
+
+    <!------------------------map---------------------->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.css" integrity="sha512-1xoFisiGdy9nvho8EgXuXvnpR5GAMSjFwp40gSRE3NwdUdIMIKuPa7bqoUhLD0O/5tPNhteAsE5XyyMi5reQVA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.min.js" integrity="sha512-SeiQaaDh73yrb56sTW/RgVdi/mMqNeM2oBwubFHagc5BkixSpP1fvqF47mKzPGWYSSy4RwbBunrJBQ4Co8fRWA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!------------------------css---------------------->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"
+    />
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/leaflet-beautify-marker-icon.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/cookiealert.css' %}" rel="stylesheet" />
+    <title>PCMO สำนักบริหารทรัพย์สินและสิทธิประโยชน์ มหาวิทยาลัยอุบลราชธานี</title>
+    <link rel="icon" href="{% static 'img/ubulogo.png' %}" type="image/icon type">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand mb-2" href="{% url 'home' %}"><img src="{% static 'img/head.png' %}" alt="" width="80%" height="70%"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                </ul>
+                <a href="{% url 'login' %}"><input type="button" class="btn btn-outline-primary ms-1" style="color:#ffffff;text-align: left;background-color: #3F51BE;text-decoration: none;" value="เข้าสู่ระบบข้อมูลผู้ประกอบการ" class="submit-btn">
+                </a>
+            </div>
+        </div>
+    </nav>
+    <br>
+    <h3>ร้านค้าและบริการภายในมหาวิทยาลัยอุบลราชธานี</h3><br>
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <div id="mapid"></div>
+        </div>
+    </div>
+    <br>
+    <div class="d-flex justify-content-center px-2">
+        <div class="search">
+            <input type="text" onfocus="document.getElementById('search-input').scrollIntoView({behavior: 'smooth'});" class="search-input" placeholder="ค้นหา..." id="search-input">
+            <button class="search-icon btn btn-danger" onclick="map_table.search('').draw(); document.getElementById('search-input').value=''">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <br>
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <table id="table-search" class="table table-hover table-striped table-light" style="width:100%">
+                    <thead class="table-head table100 ver1 m-b-110">
+                        <tr>
+                            <th>เลขที่</th>
+                            <th>ชื่อสถานที่</th>
+                            <th>สถานที่/สำนักงาน/คณะ</th>
+                            <th class="text-center">เปิดหมุดแผนที่</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in maps %}
+                        <tr>
+                            <td>{{ m.id }}</td>
+                            <td>{{ m.title }}</td>
+                            <td>{{ m.dep }}</td>
+                            <td class="text-center">
+                                <a href="#mapid" onclick="markers[{{ m.id }}].openPopup();">
+                                    <button type="button" class="btn btn-primary">
+                                        <i class="fas fa-map-marked end" ></i>
+                                    </button>
+                                </a>
+                            </td>
+                        </tr>
+                        <!-- ------------------modal_1--------------- -->
+                        <div class="mapmodal-{{ m.id }} modal fade" id="modal-place-{{ m.id }}" aria-hidden="true" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="label-{{ m.id }}">{{ m.title }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!--  -->
+                                        <div id="slide-{{ m.id }}" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                                            <div class="carousel-inner">
+                                                {% for img in m.imgs %}
+                                                <div class="carousel-item {% if img == m.imgs.0 %}active{% endif %}">
+                                                    <img
+                                                        class="lazy_load-{{ m.id }}"
+                                                        src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHdpZHRoPSI0MHB4IiBoZWlnaHQ9IjQwcHgiIHZpZXdCb3g9IjAgMCA0MCA0MCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWw6c3BhY2U9InByZXNlcnZlIiBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEuNDE0MjE7IiB4PSIwcHgiIHk9IjBweCI+CiAgICA8ZGVmcz4KICAgICAgICA8c3R5bGUgdHlwZT0idGV4dC9jc3MiPjwhW0NEQVRBWwogICAgICAgICAgICBALXdlYmtpdC1rZXlmcmFtZXMgc3BpbiB7CiAgICAgICAgICAgICAgZnJvbSB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIC13ZWJraXQtdHJhbnNmb3JtOiByb3RhdGUoLTM1OWRlZykKICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICAgICAgQGtleWZyYW1lcyBzcGluIHsKICAgICAgICAgICAgICBmcm9tIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKDBkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICAgIHRvIHsKICAgICAgICAgICAgICAgIHRyYW5zZm9ybTogcm90YXRlKC0zNTlkZWcpCiAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgICAgIHN2ZyB7CiAgICAgICAgICAgICAgICAtd2Via2l0LXRyYW5zZm9ybS1vcmlnaW46IDUwJSA1MCU7CiAgICAgICAgICAgICAgICAtd2Via2l0LWFuaW1hdGlvbjogc3BpbiAxLjVzIGxpbmVhciBpbmZpbml0ZTsKICAgICAgICAgICAgICAgIC13ZWJraXQtYmFja2ZhY2UtdmlzaWJpbGl0eTogaGlkZGVuOwogICAgICAgICAgICAgICAgYW5pbWF0aW9uOiBzcGluIDEuNXMgbGluZWFyIGluZmluaXRlOwogICAgICAgICAgICB9CiAgICAgICAgXV0+PC9zdHlsZT4KICAgIDwvZGVmcz4KICAgIDxnIGlkPSJvdXRlciI+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwwQzIyLjIwNTgsMCAyMy45OTM5LDEuNzg4MTMgMjMuOTkzOSwzLjk5MzlDMjMuOTkzOSw2LjE5OTY4IDIyLjIwNTgsNy45ODc4MSAyMCw3Ljk4NzgxQzE3Ljc5NDIsNy45ODc4MSAxNi4wMDYxLDYuMTk5NjggMTYuMDA2MSwzLjk5MzlDMTYuMDA2MSwxLjc4ODEzIDE3Ljc5NDIsMCAyMCwwWiIgc3R5bGU9ImZpbGw6YmxhY2s7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNNS44NTc4Niw1Ljg1Nzg2QzcuNDE3NTgsNC4yOTgxNSA5Ljk0NjM4LDQuMjk4MTUgMTEuNTA2MSw1Ljg1Nzg2QzEzLjA2NTgsNy40MTc1OCAxMy4wNjU4LDkuOTQ2MzggMTEuNTA2MSwxMS41MDYxQzkuOTQ2MzgsMTMuMDY1OCA3LjQxNzU4LDEzLjA2NTggNS44NTc4NiwxMS41MDYxQzQuMjk4MTUsOS45NDYzOCA0LjI5ODE1LDcuNDE3NTggNS44NTc4Niw1Ljg1Nzg2WiIgc3R5bGU9ImZpbGw6cmdiKDIxMCwyMTAsMjEwKTsiLz4KICAgICAgICA8L2c+CiAgICAgICAgPGc+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMCwzMi4wMTIyQzIyLjIwNTgsMzIuMDEyMiAyMy45OTM5LDMzLjgwMDMgMjMuOTkzOSwzNi4wMDYxQzIzLjk5MzksMzguMjExOSAyMi4yMDU4LDQwIDIwLDQwQzE3Ljc5NDIsNDAgMTYuMDA2MSwzOC4yMTE5IDE2LjAwNjEsMzYuMDA2MUMxNi4wMDYxLDMzLjgwMDMgMTcuNzk0MiwzMi4wMTIyIDIwLDMyLjAxMjJaIiBzdHlsZT0iZmlsbDpyZ2IoMTMwLDEzMCwxMzApOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksMjguNDkzOUMzMC4wNTM2LDI2LjkzNDIgMzIuNTgyNCwyNi45MzQyIDM0LjE0MjEsMjguNDkzOUMzNS43MDE5LDMwLjA1MzYgMzUuNzAxOSwzMi41ODI0IDM0LjE0MjEsMzQuMTQyMUMzMi41ODI0LDM1LjcwMTkgMzAuMDUzNiwzNS43MDE5IDI4LjQ5MzksMzQuMTQyMUMyNi45MzQyLDMyLjU4MjQgMjYuOTM0MiwzMC4wNTM2IDI4LjQ5MzksMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxMDEsMTAxLDEwMSk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMy45OTM5LDE2LjAwNjFDNi4xOTk2OCwxNi4wMDYxIDcuOTg3ODEsMTcuNzk0MiA3Ljk4NzgxLDIwQzcuOTg3ODEsMjIuMjA1OCA2LjE5OTY4LDIzLjk5MzkgMy45OTM5LDIzLjk5MzlDMS43ODgxMywyMy45OTM5IDAsMjIuMjA1OCAwLDIwQzAsMTcuNzk0MiAxLjc4ODEzLDE2LjAwNjEgMy45OTM5LDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoMTg3LDE4NywxODcpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTUuODU3ODYsMjguNDkzOUM3LjQxNzU4LDI2LjkzNDIgOS45NDYzOCwyNi45MzQyIDExLjUwNjEsMjguNDkzOUMxMy4wNjU4LDMwLjA1MzYgMTMuMDY1OCwzMi41ODI0IDExLjUwNjEsMzQuMTQyMUM5Ljk0NjM4LDM1LjcwMTkgNy40MTc1OCwzNS43MDE5IDUuODU3ODYsMzQuMTQyMUM0LjI5ODE1LDMyLjU4MjQgNC4yOTgxNSwzMC4wNTM2IDUuODU3ODYsMjguNDkzOVoiIHN0eWxlPSJmaWxsOnJnYigxNjQsMTY0LDE2NCk7Ii8+CiAgICAgICAgPC9nPgogICAgICAgIDxnPgogICAgICAgICAgICA8cGF0aCBkPSJNMzYuMDA2MSwxNi4wMDYxQzM4LjIxMTksMTYuMDA2MSA0MCwxNy43OTQyIDQwLDIwQzQwLDIyLjIwNTggMzguMjExOSwyMy45OTM5IDM2LjAwNjEsMjMuOTkzOUMzMy44MDAzLDIzLjk5MzkgMzIuMDEyMiwyMi4yMDU4IDMyLjAxMjIsMjBDMzIuMDEyMiwxNy43OTQyIDMzLjgwMDMsMTYuMDA2MSAzNi4wMDYxLDE2LjAwNjFaIiBzdHlsZT0iZmlsbDpyZ2IoNzQsNzQsNzQpOyIvPgogICAgICAgIDwvZz4KICAgICAgICA8Zz4KICAgICAgICAgICAgPHBhdGggZD0iTTI4LjQ5MzksNS44NTc4NkMzMC4wNTM2LDQuMjk4MTUgMzIuNTgyNCw0LjI5ODE1IDM0LjE0MjEsNS44NTc4NkMzNS43MDE5LDcuNDE3NTggMzUuNzAxOSw5Ljk0NjM4IDM0LjE0MjEsMTEuNTA2MUMzMi41ODI0LDEzLjA2NTggMzAuMDUzNiwxMy4wNjU4IDI4LjQ5MzksMTEuNTA2MUMyNi45MzQyLDkuOTQ2MzggMjYuOTM0Miw3LjQxNzU4IDI4LjQ5MzksNS44NTc4NloiIHN0eWxlPSJmaWxsOnJnYig1MCw1MCw1MCk7Ii8+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K"
+                                                        data-src="{{img}}"
+                                                        style="width:100%;height:300px;object-fit:contain;"
+                                                    >
+                                                </div>
+                                                
+                                                {% endfor %}
+                                                
+                                            </div>
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#slide-{{ m.id }}" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#slide-{{ m.id }}" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
+                                        </div>
+                                        <!--  -->
+                                    </div>
+                                    <div class="modal-footer justify-content-start">
+                                        <ul style="list-style-type:none">
+                                            <li>{{ m.detail }}</li>                           
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br>
+    <!-- Footer -->
+    <section id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-1">
+                    <ul class="list-unstyled list-inline social text-center">
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <br><h5>ติดต่อเรา</h5>
+                    <ul class="list-unstyled quick-links">
+                        <li><i class="fa fa-angle-double-right" style="color: #ffffff;"></i>&nbsp&nbsp&nbsp
+                            <h6 style="color: white;">
+                                วัน-เวลาทำการ.วันจันทร์-ศุกร์ เวลา 08.30-16.30
+                            </h6>
+                        </li>
+                        <li><i class="fa fa-angle-double-right" style="color: #ffffff;"></i>&nbsp&nbsp&nbsp
+                            <h6 style="color: white;">
+                                หมายเหตุ(หยุดวันเสาร์-อาทิตย์ และวันหยุดราชการอื่นๆ)
+                            </h6>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-xs-12">
+                    <br><h5>ที่อยู่</h5>
+                    <ul class="list-unstyled quick-links">
+                        <li><i class="fa fa-angle-double-right" style="color: #ffffff;"></i>&nbsp&nbsp&nbsp
+                            <h6 style="color: white;">
+                                สำนักบริหารทรัพย์สินและสิทธิประโยชน์ มหาวิทยาลัยอุบลราชธานี ต.เมืองศรีไค อ.วารินชำราบ จ.อุบลราชธานี 34190
+                            </h6>
+                        </li>
+                        <li><i class="fa fa-angle-double-right" style="color: #ffffff;"></i>&nbsp;&nbsp;
+                            <h6  style="color: white;">โทรศัพท์. 045-353062 , 081-8787491 แฟ็กส์. 045-353089 Line. 081-8787491</h6>&nbsp;&nbsp;
+                            <a href="https://www.facebook.com/pcmo2016/"><i class="fab fa-facebook-square" style="color:white"></i></a>&nbsp;
+                            
+                        </li><br>
+                    </ul>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center text-white">
+                        <p class="h6">Copyright © {% now "Y" %}. 
+                            <a class="text-green ml-2" target="_blank">
+                                สำนักบริหารทรัพย์สินและสิทธิประโยชน์ มหาวิทยาลัยอุบลราชธานี 
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+<!-- --------cookie-------- -->
+<!-- START Bootstrap-Cookie-Alert -->
+<div class="alert text-center cookiealert" id="cookie" role="alert">
+    เราใช้คุกกี้ในการให้บริการและปรับปรุงบริการของเรา ตลอดจนเพิ่มประสิทธิภาพให้แก่ประสบการณ์การเรียกดูข้อมูลของคุณ หากคุณใช้งานเว็ปไซต์ของเราต่อ ถือว่าคุณยินยอมให้มีการใช้งานคุกกี้ <a href="https://www.ubu.ac.th/new/cookies_policy.php" target="_blank">เรียนรู้เพิ่มเติม</a>
+
+    <button type="button" class="btn btn-primary btn-sm acceptcookies">
+        ยอมรับ
+    </button>
+</div>
+<!-- END Bootstrap-Cookie-Alert -->
+<!-- This comment is expected by the docker HEALTHCHECK  -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.1/js/bootstrap.bundle.min.js" integrity="sha512-trzlduO3EdG7Q0xK4+A+rPbcolVt37ftugUSOvrHhLR5Yw5rsfWXcpB3CPuEBcRBCHpc+j18xtQ6YrtVPKCdsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'js/cookiealert.js' %}"></script>
+<script type="text/javascript">
+    var mymap = L.map('mapid')
+    const width = Math.max(
+        document.documentElement.clientWidth,
+        window.innerWidth || 0
+    );
+    if (width <= 768){
+        mymap.setView([15.124072301366711, 104.90736460834299], 15);
+    } else {
+        mymap.setView([15.124113730326476, 104.91633391527957], 15);
+    }
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        minZoom: 14,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(mymap);
+    
+    mymap.locate({setView: false, maxZoom: 17});
+    
+    function onLocationFound(e) {
+          var radius = e.accuracy;
+  
+          L.marker(e.latlng).addTo(mymap)
+              .bindPopup("คุณอยู่ในระยะ " + radius + " เมตร จากจุดนี้");
+  
+          L.circle(e.latlng, radius).addTo(mymap);
+      }
+  
+  
+      mymap.on('locationfound', onLocationFound);
+  
+      function onLocationError(e) {
+          console.error(e.message);
+      }
+      
+      mymap.on('locationerror', onLocationError);
+    
+  var maps = {{maps|safe}};
+  var markers = {};
+  for (let i of maps){
+    var pop = L.popup({
+          closeOnClick: false
+      }).setContent(`
+        <h4>${i.title}</h4>
+        <div class="text-center">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-place-${i.id}">
+                รูปภาพและรายละเอียด
+                <i class="fas fa-bars end" ></i>
+            </button>
+        </div>
+    `);
+
+    icon = L.divIcon({
+        className: 'custom-div-icon',
+        html: `<div style='background-color:#e24f90;' class='marker-pin'></div><p class="awesome">${i.id}</p>`,
+        iconSize: [30, 42],
+        iconAnchor: [15, 42]
+    });
+    markers[i.id] = L.marker(i.coords,{icon:icon, title: i.title, riseOnHover: true}).addTo(mymap).bindPopup(pop);
+  }
+
+</script>
+
+
+<script>
+    var map_table = $('#table-search');
+    $(document).ready(function() {
+        map_table = map_table.DataTable({
+            lengthMenu: [
+                [25, 50, 100, -1],
+                [25, 50, 100, "ทั้งหมด"]
+            ],
+            dom: "<'row'<'col-sm-12 col-md-6'l>>" +
+                "<'row table-responsive'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+        });
+
+
+        $('#search-input').on('keyup', function() {
+            map_table.search(this.value).draw();
+        });
+    });
+</script>
+<script>
+    var btn = $('#button');
+
+    $(window).scroll(function() {
+        if ($(window).scrollTop() > 300) {
+            btn.addClass('show');
+        } else {
+            btn.removeClass('show');
+        }
+    });
+
+    btn.on('click', function(e) {
+        e.preventDefault();
+        $('html, body').animate({
+            scrollTop: 0
+        }, '300');
+    });
+</script>
+<script>
+    {% for i in maps %}
+    $('.mapmodal-{{i.id}}').on("show.bs.modal", function () {
+        $('.lazy_load-{{i.id}}').each(function(){
+            var img = $(this);
+            img.attr('src', img.data('src'));
+        });
+    });
+    {% endfor %}
+</script>
+</body>
+</html>

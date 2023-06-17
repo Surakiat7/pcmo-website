@@ -1,0 +1,360 @@
+{% extends "dashboard/base.html" %} {% block title %}หน้าจัดการร้านค้า{% endblock %} {% block externalhead %}
+
+<!-------Date time---------->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function() {
+        $("#datepicker").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker1").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker2").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker3").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker4").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker5").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+        $("#datepicker6").datepicker({
+            dateFormat: 'yy-mm-dd'
+        });
+    });
+</script>
+<!-- End Date time -->
+{% endblock %} {% block content %}
+
+{% comment %} end modal show detail {% endcomment %} {% comment %} modal delete {% endcomment %}
+<!-- Modal -->
+<div class="modal fade" id="ModalRemove" tabindex="-1" aria-labelledby="ModalRemoveLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="{% url 'deleteStore' store.id %}">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="ModalRemoveLabel">ลบ</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    คุณแน่ใจว่าต้องการลบ {{ store.data.Type }} หรือไม่
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger mb-1 btn-md" name="confirm">ใช่</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" name="cancel">ไม่</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- เขียนเนื้อหาส่วนฝั่งขวาตรงนี้ -->
+<div class="container-fluid  mt-2 mt-md-0">
+    <section>
+        <h3 class="nav-link " style="color:#ffffff;text-align: left;background-color: #0B409C;">
+            <b>รายละเอียดของ: {{ store.data.Type }}</b>
+        </h3>
+        <div class="row">
+            {% if water %}
+            <div class="col-md-4">
+                <div class="d-flex flex-column bd-highlight mb-3">
+                    <div class="bd-highlight">
+                        <table id="water-table" class="table table-hover table-striped table-light" style="width:100%">
+                            <thead class="table-head table100 ver1 m-b-110">
+                                <tr>
+                                    <th>การชำระค่าน้ำประปา</th>
+                                    <th>จำนวนเงิน (บาท)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in water %}
+                                <tr class="table-success">
+                                    <td>{{ i.date | date:"F Y" }}</td>
+                                    <td>{{ i.water}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- End forloop here -->
+                </div>
+            </div>
+            {% endif %} {% if electric %}
+            <div class="col-md-4">
+                <div class="d-flex flex-column bd-highlight mb-3">
+                    <div class="bd-highlight">
+                        <table id="electric-table" class="table table-hover table-striped table-light" style="width:100%">
+                            <thead class="table-head table100 ver1 m-b-110">
+                                <tr>
+                                    <th>การชำระค่าไฟฟ้า</th>
+                                    <th>จำนวนเงิน (บาท)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in electric %}
+                                <tr class="table-success">
+                                    <td>{{ i.date | date:"F Y" }}</td>
+                                    <td>{{ i.electric}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- End forloop here -->
+                </div>
+            </div>
+            {% endif %} {% if wash %}
+            <div class="col-md-4">
+                <div class="d-flex flex-column bd-highlight mb-3">
+                    <div class="bd-highlight">
+                        <table id="wash-table" class="table table-hover table-striped table-light" style="width:100%">
+                            <thead class="table-head table100 ver1 m-b-110">
+                                <tr>
+                                    <th>การชำระค่าล้างภาชนะ</th>
+                                    <th>จำนวนเงิน (บาท)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in wash %}
+                                <tr class="table-success">
+                                    <td>{{ i.date | date:"F Y" }}</td>
+                                    <td>{{ i.wash}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- End forloop here -->
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <li>
+            <hr />
+            <form method="POST" action="{% url 'saveStoreOwner' store.id %}">
+                {% csrf_token %}
+                <div class="mb-3 ">
+                    <label for="userselect" class="form-label">เลือกผู้ใช้</label>
+                    <select id="userselect" class="form-control form-select " aria-label="userselect" name="owner">
+                        {% for i in users %}
+                        <option value="{{i.id}}" {% if i.username == store.owner.username %} selected {% endif %}>
+                            {{i.username}} - {{i.first_name }} {{ i.last_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="form-control btn btn-primary">บันทึกผู้ใช้</button>
+                </div>
+            </form>
+            <hr />
+
+            <!----------------------------------------form------------------------------>
+            <form method="POST" action="{% url 'editStore' store.id %}">
+                {% csrf_token %}
+                <div class="mb-3 ">
+                    <label for="formGroupInput1" class="form-label">ประเภทกิจการ</label>
+                    <input type="text" class="form-control" id="formGroupInput1" placeholder="Type" name="Type" value="{{ store.data.Type }}" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupInput2" class="form-label">คณะ/หน่วยงาน/สำนักงาน</label>
+                    <input type="text" class="form-control" id="formGroupInput2" placeholder="Departments" name="departments" value="{{ store.data.departments }}" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupInput3" class="form-label">คู่สัญญา</label>
+                    <input type="text" class="form-control" id="formGroupInput1" placeholder="License_name" name="License_name" value="{{ store.data.License_name }}" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupInput4" class="form-label">ที่อยู่</label>
+                    <input type="text" class="form-control" id="formGroupInput4" placeholder="Address" name="Address" value="{{ store.data.Address }}" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupInput5" class="form-label">หมายเลขโทรศัพท์</label>
+                    <input type="text" class="form-control" id="formGroupInput5" placeholder="PhoneNumber" name="PhoneNumber" value="{{ store.data.PhoneNumber }}" required>
+                </div>
+                <!-- --------- -->
+                <br>
+                <div class="mb-3 ">
+                    <label for="formGroupInput6" class="form-label" style="font-weight: bold;">อายุสัญญา</label>
+                    <hr>
+                    <label for="formGroupInput6" class="form-label">ระยะเวลา</label>
+                    <input type="text" class="form-control" id="formGroupInput6" placeholder="contract_period" name="contract_period" value="{{ store.data.contract_period }}" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="datepicker" class="form-label">เริ่ม</label>
+                    <input type="text" class="form-control" id="datepicker" placeholder="contract_start" name="contract_start" value="{{ store.data.contract_start }}" required>
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="datepicker1" class="form-label">สิ้นสุด</label>
+                    <input type="text" class="form-control" id="datepicker1" placeholder="contract_end" name="contract_end" value="{{ store.data.contract_end }}" required>
+                </div>
+                <!-- --------- -->
+                <br>
+                <div class="mb-3 ">
+                    <label for="formGroupInput7" class="form-label" style="font-weight: bold;">อัตราค่าบำรุงพื้นที่(บาท/ปี)</label>
+                    <input type="text" class="form-control" id="formGroupInput7" placeholder="Area_maintenance" name="Area_maintenance" value="{{ store.data.Area_maintenance  }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupExampleInput2" class="form-label" style="font-weight: bold;">ใบเสร็จรับเงิน</label>
+                    <br>
+                    <label for="formGroupInput8" class="form-label">เล่มที่</label>
+                    <input type="text" class="form-control" id="formGroupInput8" placeholder="Maintenance_id" name="Maintenance_id" value="{{ store.data.Maintenance_id }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupInput9" class="form-label">เลขที่</label>
+                    <input type="text" class="form-control" id="formGroupInput9" placeholder="Maintenance_Number" name="Maintenance_Number" value="{{ store.data.Maintenance_Number }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="datepicker3" class="form-label">ลงวันที่</label>
+                    <input type="text" class="form-control" id="datepicker3" placeholder="Maintenance_Timestamp" name="Maintenance_Timestamp" value="{{ store.data.Maintenance_Timestamp }}">
+                    <hr>
+                </div>
+                <!-- --------- -->
+                <br>
+                <div class="mb-3 ">
+                    <label for="formGroupInput10" class="form-label" style="font-weight: bold;">ค่าประกันสัญญา
+                        (บาท)</label>
+                    <input type="text" class="form-control" id="formGroupInput10" placeholder="contract_insurance" name="contract_insurance" value="{{ store.data.contract_insurance }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupExampleInput3" class="form-label" style="font-weight: bold;">ใบเสร็จรับเงิน</label>
+                    <br>
+                    <label for="formGroupInput11" class="form-label">เล่มที่</label>
+                    <input type="text" class="form-control" id="formGroupInput11" placeholder="Insurance_id" name="Insurance_id" value="{{ store.data.Insurance_id }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupInput12" class="form-label">เลขที่</label>
+                    <input type="text" class="form-control" id="formGroupInput12" placeholder="Insurance_Number" name="Insurance_Number" value="{{ store.data.Insurance_Number }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="datepicker4" class="form-label">ลงวันที่</label>
+                    <input type="text" class="form-control" id="datepicker4" placeholder="Insurance_Timestamp" name="Insurance_Timestamp" value="{{ store.data.Insurance_Timestamp }}">
+                    <hr>
+                </div>
+                <!-- --------- -->
+                <br>
+                <div class="mb-3 ">
+                    <label for="formGroupInput" class="form-label" style="font-weight: bold;">เงินบริจาค</label>
+                    <label for="formGroupInput13" class="form-label" style="font-weight: bold;">สนับสนุนเป็นทุนการ
+                        ศึกษาแก่นักศึกษา (บาท)</label>
+                    <input type="text" class="form-control" id="formGroupInput13" placeholder="Support_ST" name="Support_ST" value="{{ store.data.Support_ST }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupExampleInput2" class="form-label" style="font-weight: bold;">ใบเสร็จรับเงิน</label>
+                    <br>
+                    <label for="formGroupInput14" class="form-label">เล่มที่</label>
+                    <input type="text" class="form-control" id="formGroupInput14" placeholder="Support_id_ST" name="Support_id_ST" value="{{ store.data.Support_id_ST }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupInput15" class="form-label">เลขที่</label>
+                    <input type="text" class="form-control" id="formGroupInput15" placeholder="Support_Number_ST" name="Support_Number_ST" value="{{ store.data.Support_Number_ST }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="datepicker5" class="form-label">ลงวันที่</label>
+                    <input type="text" class="form-control" id="datepicker5" placeholder="SupportTimestamp_ST" name="SupportTimestamp_ST" value="{{ store.data.SupportTimestamp_ST }}">
+                    <hr>
+                </div>
+                <!-- --------- -->
+                <br>
+                <div class="mb-3 ">
+                    <label for="formGroupInput16" class="form-label" style="font-weight: bold;">สนับสนุนสำนักบริหารทรัพย์สินฯ (บาท)</label>
+                    <input type="text" class="form-control" id="formGroupInput16" placeholder="Support_PCM" name="Support_PCM" value="{{ store.data.Support_PCM }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupExampleInput2" class="form-label" style="font-weight: bold;">ใบเสร็จรับเงิน</label>
+                    <br>
+                    <label for="formGroupInput17" class="form-label">เล่มที่</label>
+                    <input type="text" class="form-control" id="formGroupInput17" placeholder="Support_id_PCM" name="Support_id_PCM" value="{{ store.data.Support_id_PCM }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="formGroupInput18" class="form-label">เลขที่</label>
+                    <input type="text" class="form-control" id="formGroupInput18" placeholder="Support_Number_PCM" name="Support_Number_PCM" value="{{ store.data.Support_Number_PCM }}">
+                </div>
+                <!-- --------- -->
+                <div class="mb-3 ">
+                    <label for="datepicker6" class="form-label ">ลงวันที่</label>
+                    <input type="text" class="form-control" id="datepicker6" placeholder="Support_Timestamp_PCM" name="Support_Timestamp_PCM" value="{{ store.data.Support_Timestamp_PCM }}">
+                    <hr>
+                </div>
+                <!-- --------- -->
+
+                <div class="form-outline  mb-3">
+                    <label for="formGroupInput19" class="form-label">หมายเหตุ</label>
+                    <textarea class="form-control" style="white-space: pre-wrap;" warp="hard" id="formGroupInput19" rows="2" placeholder="Note" name="Note">{{ store.data.Note }}</textarea>
+                </div>
+                <!-- End forloop here -->
+                <button type="submit" class="btn btn-primary mb-1" id="addInput">บันทึก</button>
+            </form>
+
+            <hr />
+            <div class="mb-3">
+                <button type="button" class="btn btn-danger mb-1 btn-md" data-bs-toggle="modal" data-bs-target="#ModalRemove">ลบ {{ store.data.Type}}</button>
+            </div>
+        </li>
+
+</div>
+</section>
+</div>
+
+
+{% endblock %} {% block script %}
+<script>
+    $(document).ready(function() {
+        {% if electric %}
+        $('#electric-table').DataTable({
+            ordering: false,
+            lengthMenu: [
+                [6],
+                [6]
+            ],
+            dom: "<'row table-responsive'<'col-sm-12'tr>>" +
+                "<'row'<'col-12'p>>"
+        });
+        {% endif %}
+        {% if water %}
+        $('#water-table').DataTable({
+            ordering: false,
+            lengthMenu: [
+                [6],
+                [6]
+            ],
+            dom: "<'row table-responsive'<'col-sm-12'tr>>" +
+                "<'row'<'col-12'p>>"
+        });
+        {% endif %}
+        {% if wash %}
+        $('#wash-table').DataTable({
+            ordering: false,
+            lengthMenu: [
+                [6],
+                [6]
+            ],
+            dom: "<'row table-responsive'<'col-sm-12'tr>>" +
+                "<'row'<'col-12'p>>"
+        });
+        {% endif %}
+    });
+</script>
+{% endblock %}

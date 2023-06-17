@@ -1,0 +1,61 @@
+{% extends "dashboard/base.html" %} {% block title %}แสดงศัญญา{% endblock %} {% block search %}
+<div class="d-flex justify-content-center px-2">
+    <div class="search">
+        <input type="text" class="search-input" placeholder="ค้นหา..." id="search-input">
+        <button class="search-icon btn" style="background-color: #2E3EB5;">
+      <i class="fa fa-search"></i>
+    </button>
+    </div>
+</div>
+{% endblock %} {% block content %}
+
+
+<div class="col position-relative  mt-2 mt-md-0">
+    <div class="d-flex flex-column bd-highlight">
+        <div id="text-store" class="bd-highlight">
+            <table id="table-search" class="table table-hover table-striped table-light" style="width:100%">
+                <thead class="table-head table100 ver1 m-b-110">
+                    <tr>
+                        <th>ประเภทกิจการ</th>
+                        <th>คู่สัญญา</th>
+                        <th>อายุสัญญา</th>
+                        <th>วันสิ้นสุดสัญญา</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in license %}
+                    <tr {% if i.isdanger %}class="table-danger" {% endif %}>
+                        <td>{{ i.Type }}</td>
+                        <td>{{ i.License_name }}</td>
+                        <td>{{ i.contract_period }}</td>
+                        <td>{{ i.contract_end }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- End forloop here -->
+    </div>
+</div>
+
+{% endblock %} {% block script %}
+<script>
+    $(document).ready(function() {
+        let table = $('#table-search').DataTable({
+            ordering: false,
+            lengthMenu: [
+                [25, 50, 100, -1],
+                [25, 50, 100, "ทั้งหมด"]
+            ],
+            dom: "<'row'<'col-sm-12 col-md-6'l>>" +
+                "<'row table-responsive'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+        });
+
+
+        $('#search-input').on('keyup', function() {
+            table.search(this.value).draw();
+        });
+    });
+</script>
+{% endblock %}
